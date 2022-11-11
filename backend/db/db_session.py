@@ -6,24 +6,36 @@
 import aiomysql as aiomysql
 
 
-async def getSQLResult(sql):
+async def getSQLResult(sql,type='select'):
         pool = await aiomysql.create_pool(
             host='127.0.0.1',
             port=3306,
             user='root',
             password='123456',
             db='demo',
-            autocommit=False,
+            autocommit=True,
             cursorclass=aiomysql.cursors.DictCursor)
 
-        async with pool.acquire() as conn:
-            cur = await conn.cursor()
-            try:
-                await cur.execute(sql)
-            except:
-                raise Exception("sql语句异常-{}".format(sql))
-            (r) = await cur.fetchall()
-            pool.close()
-            return r
+        if type == "select":
+            async with pool.acquire() as conn:
+                cur = await conn.cursor()
+                try:
+                    await cur.execute(sql)
+                except:
+                    raise Exception("sql语句异常-{}".format(sql))
+                (r) = await cur.fetchall()
+                pool.close()
+                return r
+
+        if type == "insert":
+            async with pool.acquire() as conn:
+                cur = await conn.cursor()
+                try:
+                    await cur.execute(sql)
+                except:
+                    raise Exception("sql语句异常-{}".format(sql))
+                id = cur.lastrowid
+                pool.close()
+                return id
 
 
