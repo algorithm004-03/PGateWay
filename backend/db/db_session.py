@@ -3,39 +3,118 @@
 # @Mail: 15717163552@163.com
 # @Author: mozhouqiu
 # @Time: 2022/11/9 17:57
+from time import time
+
 import aiomysql as aiomysql
 
+pool = None
 
-async def getSQLResult(sql,type='select'):
+
+async def get_pool():
+    global pool
+    if pool is None:
         pool = await aiomysql.create_pool(
             host='127.0.0.1',
             port=3306,
             user='root',
             password='123456',
             db='demo',
-            autocommit=True,
+            autocommit=False,
             cursorclass=aiomysql.cursors.DictCursor)
+    return pool
 
-        if type == "select":
-            async with pool.acquire() as conn:
-                cur = await conn.cursor()
-                try:
-                    await cur.execute(sql)
-                except:
-                    raise Exception("sql语句异常-{}".format(sql))
-                (r) = await cur.fetchall()
-                pool.close()
-                return r
 
-        if type == "insert":
-            async with pool.acquire() as conn:
-                cur = await conn.cursor()
-                try:
-                    await cur.execute(sql)
-                except:
-                    raise Exception("sql语句异常-{}".format(sql))
-                id = cur.lastrowid
-                pool.close()
-                return id
+async def insert(table_name, insert_dict):
+    pool = await get_pool()
+    param = ''
+    value = ''
+    if (isinstance(insert_dict, dict)):
+        for key in insert_dict.keys():
+            param = param + key + ','
+            value = value + "'"+insert_dict[key] + "'"+','
+        param = param[:-1]
+        value = value[:-1]
+        sql = "insert into %s(%s) values(%s)" % (table_name, param, value)
+        conn = await pool.acquire()
+        cursor = await conn.cursor()
+        try:
+            await cursor.execute(sql)
+            await conn.commit()
+            id = cursor.lastrowid
+            return id
+        except:
+            conn.rollback()
+        finally:
+            await cursor.close()
+            conn.close()
+
+
+
+async def update(table_name,id,update_dict):
+    pool = await get_pool()
+    if (isinstance(update_dict, dict)):
+        update_content_sql = ''.join(['`{}`=%s, '.format(val) for val in list(update_dict.keys())])[:-2]
+        sql = "update {} set {} where id={}".format(table_name, update_content_sql,id  )
+        conn = await pool.acquire()
+        cursor = await conn.cursor()
+        try:
+            cursor.execute(sql)
+            conn.commit()
+        except:
+            conn.rollback()
+        finally:
+            await cursor.close()
+            conn.close()
+
+
+
+async def select(table_name,column_names,where_dict,offset=0,limit=10):
+    pool = await get_pool()
+    if (isinstance(column_names, list)) and (isinstance(where_dict,dict)):
+        for index,item in enumerate(column_names):
+            if column_names[index] == "create_time":
+                column_names[index] = "date_format(create_time,'%Y-%m-%d %T') as create_time"
+            if column_names[index] == "update_time":
+                column_names[index] = "date_format(update_time,'%Y-%m-%d %T') as update_time"
+        where_sql=""
+        for k,v in where_dict.items():
+            where_sql += "{} = '{}' and".format(k,v)
+        where_sql = where_sql + " 1 = 1"
+        column_names = (",").join(column_names)
+        sql_data = "select {} from {} where {} and  delete_time is null limit {},{}".format(column_names,table_name,where_sql,offset,limit)
+        sql_count = "select count(*) as count from {} where delete_time is null".format(table_name)
+        conn = await pool.acquire()
+        cursor = await conn.cursor()
+        try:
+            await cursor.execute(sql_data)
+
+            (r) = await cursor.fetchall()
+            await cursor.execute(sql_count)
+            result = await cursor.fetchall()
+            total =result[0]["count"]
+            await conn.commit()
+            return r,total
+        except:
+            conn.rollback()
+        finally:
+            await cursor.close()
+            conn.close()
+
+
+
+async def delete(table_name,id):
+    pool = await get_pool()
+    now_time = time.time()
+    sql = "update {} set delete_time = {} where id = {}".format(table_name,now_time, id)
+    conn = await pool.acquire()
+    cursor = await conn.cursor()
+    try:
+        cursor.execute(sql)
+        conn.commit()
+    except:
+        conn.rollback()
+    finally:
+        await cursor.close()
+        conn.close()
 
 

@@ -1,6 +1,6 @@
 from aiohttp import web
 import aiohttp
-from backend.db.db_session import getSQLResult
+from backend.db.db_session import select, insert
 import aiohttp_cors
 
 """微服务地址,根据实际情况修改"""
@@ -19,8 +19,7 @@ async def pre_handle(service_name,request):
         return {"code": "100010", "data": "暂不支持非json格式数据"}
     else:
         """根据微服务名称查找微服务地址及端口"""
-        micro_server_list = await getSQLResult(
-            "select host from gateway_mapping where service_name='{}' and delete_time is null".format(service_name))
+        micro_server_list,total = await select("gateway_mapping",["host"],{"service_name":service_name})
         if micro_server_list:
             host = micro_server_list[0]['host']
             target_url = str(request.url).replace(SERVER + '/' + service_name, host)
@@ -62,26 +61,17 @@ async def get_all(request):
         offset,limit = json_data["offset"],json_data['limit']
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
-    data_sql = "select id,service_name,host,is_alive," \
-               "date_format(create_time,'%Y-%m-%d %T') as create_time," \
-               "date_format(update_time,'%Y-%m-%d %T') as update_time " \
-               "from gateway_mapping where delete_time is null limit {},{}".format(offset,limit)
-    data_list = await getSQLResult(data_sql)
-    count_sql = "select count(*) as count from gateway_mapping where delete_time is null"
-    count_result = await getSQLResult(count_sql)
-    total = count_result[0]["count"]
+    data_list,total =await select("gateway_mapping",["id","service_name","host","create_time","update_time"],{},offset,limit)
     return web.json_response({'code':"10000","data":data_list,"total":total,"msg":"请求成功"})
 
 
 @routes.post("/gateway/create")
 async def get_all(request):
     try:
-        json_data = await request.json()
-        service_name,host = json_data["service_name"],json_data['host']
+        dict_data = await request.json()
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
-    data_sql = "insert into gateway_mapping(service_name,host) values('{}','{}')".format(service_name,host)
-    result = await getSQLResult(data_sql,"insert")
+    result = await insert("gateway_mapping",dict_data)
     return web.json_response({'code':"10000","data":result,"msg":"请求成功"})
 
 
