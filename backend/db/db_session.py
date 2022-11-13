@@ -53,13 +53,16 @@ async def insert(table_name, insert_dict):
 async def update(table_name,id,update_dict):
     pool = await get_pool()
     if (isinstance(update_dict, dict)):
-        update_content_sql = ''.join(['`{}`=%s, '.format(val) for val in list(update_dict.keys())])[:-2]
-        sql = "update {} set {} where id={}".format(table_name, update_content_sql,id  )
+        del update_dict["id"]
+        del update_dict["updated_at"]
+        update_content_sql = ''.join(["{}='{}',".format(val,update_dict[val]) for val in list(update_dict.keys())])[:-1]
+        sql = "update {} set {} where id={}".format(table_name, update_content_sql,id)
+        print(22, sql)
         conn = await pool.acquire()
         cursor = await conn.cursor()
         try:
-            cursor.execute(sql)
-            conn.commit()
+            await cursor.execute(sql)
+            await conn.commit()
         except:
             conn.rollback()
         finally:

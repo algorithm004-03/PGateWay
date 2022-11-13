@@ -1,6 +1,6 @@
 from aiohttp import web
 import aiohttp
-from backend.db.db_session import select, insert
+from backend.db.db_session import select, insert, update
 import aiohttp_cors
 
 """微服务地址,根据实际情况修改"""
@@ -72,6 +72,15 @@ async def get_all(request):
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
     result = await insert("gateway_mapping",dict_data)
+    return web.json_response({'code':"10000","data":result,"msg":"请求成功"})
+
+@routes.post("/gateway/update")
+async def get_all(request):
+    try:
+        dict_data = await request.json()
+    except:
+        return web.json_response({'code': "100200", 'msg':"请求参数错误"})
+    result = await update("gateway_mapping",dict_data["id"],dict_data)
     return web.json_response({'code':"10000","data":result,"msg":"请求成功"})
 
 

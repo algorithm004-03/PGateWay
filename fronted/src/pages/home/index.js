@@ -71,10 +71,29 @@ function RenderBase() {
 			dispatch({ type: 'forcedUpdate', payload: { needCreate: false } })
 			Post({ url: `/gateway/create`, values }).then((res) => {
 				let { status, body } = res
-				console.log(333, body)
 				if (status == 200 && body.code == 10000) {
 
 					dispatch({ type: 'forcedUpdate', payload: { data: body.data, dataLoadingFinished: true, pagination: { ...pagination, total: body.total ? body.total : 0 } } })
+				} else {
+					let messageDisplay = body.msg ? body.msg : errMessage[status]
+					dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: status } })
+					message.error(messageDisplay);
+				}
+			}).catch((err) => {
+				message.error(JSON.stringify(err));
+				dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: 500 } })
+			})
+		}
+
+		if (state.needUpdate && state.needUpdate.values) {
+			let values = {...state.needUpdate.values}
+			dispatch({ type: 'forcedUpdate', payload: { needUpdate: false } })
+			console.log(222,values)
+			Post({ url: `/gateway/update`, values }).then((res) => {
+				let { status, body } = res
+				
+				if (status == 200 && body.code == 10000) {
+					dispatch({ type: 'forcedUpdate', payload: { data: body.data, dataLoadingFinished: true } })
 				} else {
 					let messageDisplay = body.msg ? body.msg : errMessage[status]
 					dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: status } })
@@ -127,9 +146,9 @@ function RenderBase() {
 			key: 'operation',
 			fixed: 'right',
 			width: 120,
-			render: () => <div>
-				<a>修改</a>
-				<a style={{ "marginLeft": "10px" }}>删除</a></div>,
+			render: (record) => <div style={{"color":"#108ee9"}}>
+				<span style={{"cursor": "pointer"}}  onClick={()=>{dispatch({type: 'forcedUpdate', payload:{modalVisible:true, modalType: "update", selectedRow:{...record}}})}}>修改</span>
+				<span style={{ "marginLeft": "10px","cursor": "pointer" }}>删除</span></div>,
 		}
 	];
 
@@ -142,7 +161,7 @@ function RenderBase() {
 			  dispatch({type: 'forcedUpdate', payload:{modalVisible:false, copyRow: false, needCreate:{values: data}}})
 		  } 
 		  if (modalType === 'update') {
-			  dispatch({type: 'forcedUpdate', payload:{modalVisible:false, needUpdate:{values: {...data, updated_at: selectedRow.updated_at} }}})
+			  dispatch({type: 'forcedUpdate', payload:{modalVisible:false, needUpdate:{values: {...data, updated_at: selectedRow.update_time} }}})
 		  }
 		},    
 		onCancel () {
