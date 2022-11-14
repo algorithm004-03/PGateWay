@@ -3,8 +3,7 @@
 # @Mail: 15717163552@163.com
 # @Author: mozhouqiu
 # @Time: 2022/11/9 17:57
-from time import time
-
+from datetime import datetime
 import aiomysql as aiomysql
 
 pool = None
@@ -37,17 +36,21 @@ async def insert(table_name, insert_dict):
         sql = "insert into %s(%s) values(%s)" % (table_name, param, value)
         conn = await pool.acquire()
         cursor = await conn.cursor()
-        try:
-            await cursor.execute(sql)
-            await conn.commit()
-            id = cursor.lastrowid
-            return id
-        except:
-            conn.rollback()
-        finally:
-            await cursor.close()
-            conn.close()
-
+        # try:
+        await cursor.execute(sql)
+        await conn.commit()
+        id = cursor.lastrowid
+        query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
+                    "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
+        await cursor.execute(query_sql)
+        (result,) = await cursor.fetchall()
+        return {"code":10000,"msg":"新增成功","data":result}
+        # except:
+        #     await conn.rollback()
+        #     return {"code": 10001, "msg": "数据库执行错误"}
+        # finally:
+        #     await cursor.close()
+        #     conn.close()
 
 
 async def update(table_name,id,update_dict):
@@ -57,17 +60,22 @@ async def update(table_name,id,update_dict):
         del update_dict["updated_at"]
         update_content_sql = ''.join(["{}='{}',".format(val,update_dict[val]) for val in list(update_dict.keys())])[:-1]
         sql = "update {} set {} where id={}".format(table_name, update_content_sql,id)
-        print(22, sql)
         conn = await pool.acquire()
         cursor = await conn.cursor()
-        try:
-            await cursor.execute(sql)
-            await conn.commit()
-        except:
-            conn.rollback()
-        finally:
-            await cursor.close()
-            conn.close()
+        # try:
+        await cursor.execute(sql)
+        await conn.commit()
+        query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
+                    "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
+        await cursor.execute(query_sql)
+        (result,) = await cursor.fetchall()
+        return {"code": 10000, "msg": "修改成功", "data": result}
+        # except:
+        #     await conn.rollback()
+        #     return {"code": 10001, "msg": "数据库执行错误"}
+        # finally:
+        #     await cursor.close()
+        #     conn.close()
 
 
 
@@ -96,9 +104,10 @@ async def select(table_name,column_names,where_dict,offset=0,limit=10):
             result = await cursor.fetchall()
             total =result[0]["count"]
             await conn.commit()
-            return r,total
+            return {"code": 10000, "msg": "查询成功", "data": r,"total":total}
         except:
-            conn.rollback()
+            await conn.rollback()
+            return {"code": 10001, "msg": "数据库执行错误"}
         finally:
             await cursor.close()
             conn.close()
@@ -107,15 +116,18 @@ async def select(table_name,column_names,where_dict,offset=0,limit=10):
 
 async def delete(table_name,id):
     pool = await get_pool()
-    now_time = time.time()
-    sql = "update {} set delete_time = {} where id = {}".format(table_name,now_time, id)
+    now_time = datetime.now()
+    sql = "update {} set delete_time = '{}' where id = {}".format(table_name,now_time, id)
     conn = await pool.acquire()
     cursor = await conn.cursor()
     try:
-        cursor.execute(sql)
-        conn.commit()
+        print(111,sql)
+        await cursor.execute(sql)
+        await conn.commit()
+        return {"code": 10000, "msg": "删除成功"}
     except:
-        conn.rollback()
+        await conn.rollback()
+        return {"code": 10001, "msg": "数据库执行错误"}
     finally:
         await cursor.close()
         conn.close()

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useReducer, useContext } from 'react';
-import { Table, message, Button,Form,Input } from 'antd';
+import { Table, message, Button, Form, Input } from 'antd';
 import { reducer, Post, errMessage } from '../../utils';
 import ModalRender from './ModalRender';
 import './index.scss'
@@ -12,52 +12,34 @@ import {
 
 var initialState = {
 	data: [],
-	dataFetchProps: {},
 	dataLoading: true,
-	dataLoadingFinished: false, // false 时，spin
 	modalVisible: false,
 	modalType: 'create',
 	selectedRow: {},
-	selectedRowIndex: -1,
-	selectedRows: [],
-	selectedRowKeys: [],
-	sorterPage: {},
-	filters: {},
 	searchProps: {},
 	pagination: { current: 1, pageSize: 10, total: 0, },
 	statusCode: 200,
-	waitingServerResponse: false, // 在处理增删改的过程中，等待服务器返回结果，控制用户不重复点击（严格处理，通常情况下影响很小）
 };
 
 
 function RenderBase() {
-	const [collapsed, setCollapsed] = useState(false);
+
 	const [state, dispatch] = useReducer(reducer, initialState);
-
-	const { data, dataLoading, dataLoadingFinished, dataFetchProps, sorterPage, modalVisible, modalType, selectedRow, selectedRows, selectedRowKeys, filters, searchProps, pagination, statusCode, waitingServerResponse } = state;
-
-	// const ds = useContext(APPContext);
-	// const { enumGlobal, tablesDefGlobal } = ds.story //全局公用变量
-
-	// const currentColumnDesc = tablesDefGlobal[tableNameGetDef] ? tablesDefGlobal[tableNameGetDef] : false
-
-
-
+	const { data, dataLoading, modalVisible, modalType, selectedRow, pagination } = state;
 
 	useEffect(() => {
 
-		if (state.dataLoading) {
-			dispatch({ type: 'forcedUpdate', payload: { dataLoading: false, dataLoadingFinished: false, } })
+		if (dataLoading) {
+			dispatch({ type: 'forcedUpdate', payload: { dataLoading: false } })
 			let dataFetchPropsRender = { offset: (pagination.current - 1) * pagination.pageSize, limit: pagination.pageSize };
 			Post({ url: `/gateway/findAll`, values: dataFetchPropsRender }).then((res) => {
 				let { status, body } = res
-				console.log(333, body)
+				console.log("findAll", body)
 				if (status == 200 && body.code == 10000) {
-
-					dispatch({ type: 'forcedUpdate', payload: { data: body.data, dataLoadingFinished: true, pagination: { ...pagination, total: body.total ? body.total : 0 } } })
+					dispatch({ type: 'forcedUpdate', payload: { data: body.data,  pagination: { ...pagination, total: body.total ? body.total : 0 } } })
 				} else {
 					let messageDisplay = body.msg ? body.msg : errMessage[status]
-					dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: status } })
+					dispatch({ type: 'forcedUpdate', payload: { statusCode: status } })
 					message.error(messageDisplay);
 				}
 			}).catch((err) => {
@@ -67,13 +49,13 @@ function RenderBase() {
 		}
 
 		if (state.needCreate && state.needCreate.values) {
-			let values = {...state.needCreate.values}
+			let values = { ...state.needCreate.values }
 			dispatch({ type: 'forcedUpdate', payload: { needCreate: false } })
 			Post({ url: `/gateway/create`, values }).then((res) => {
 				let { status, body } = res
+				console.log("create", body)
 				if (status == 200 && body.code == 10000) {
-
-					dispatch({ type: 'forcedUpdate', payload: { data: body.data, dataLoadingFinished: true, pagination: { ...pagination, total: body.total ? body.total : 0 } } })
+					dispatch({ type: 'addOneRowData', payload: {data:body.data } })
 				} else {
 					let messageDisplay = body.msg ? body.msg : errMessage[status]
 					dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: status } })
@@ -86,24 +68,40 @@ function RenderBase() {
 		}
 
 		if (state.needUpdate && state.needUpdate.values) {
-			let values = {...state.needUpdate.values}
+			let values = { ...state.needUpdate.values }
 			dispatch({ type: 'forcedUpdate', payload: { needUpdate: false } })
-			console.log(222,values)
 			Post({ url: `/gateway/update`, values }).then((res) => {
 				let { status, body } = res
-				
+				console.log("update", body)
 				if (status == 200 && body.code == 10000) {
-					dispatch({ type: 'forcedUpdate', payload: { data: body.data, dataLoadingFinished: true } })
+					message.success(body.msg);
+					dispatch({ type: 'updateDataById', payload: { id: selectedRow.id, data: body.data } })
 				} else {
 					let messageDisplay = body.msg ? body.msg : errMessage[status]
-					dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: status } })
 					message.error(messageDisplay);
 				}
 			}).catch((err) => {
 				message.error(JSON.stringify(err));
-				dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: 500 } })
 			})
 		}
+
+		if (state.needDelete && state.needDelete.values) {
+			let values = { ...state.needDelete.values }
+			dispatch({ type: 'forcedUpdate', payload: { needDelete: false } })
+			Post({ url: `/gateway/delete`, values }).then((res) => {
+				let { status, body } = res
+				if (status == 200 && body.code == 10000) {
+					message.success(body.msg);
+					dispatch({ type: 'deleteDataById', payload: { id: values.id} })
+				} else {
+					message.error(body.msg);
+				}
+			}).catch((err) => {
+				message.error(JSON.stringify(err));
+			})
+		}
+
+
 
 
 
@@ -146,51 +144,48 @@ function RenderBase() {
 			key: 'operation',
 			fixed: 'right',
 			width: 120,
-			render: (record) => <div style={{"color":"#108ee9"}}>
-				<span style={{"cursor": "pointer"}}  onClick={()=>{dispatch({type: 'forcedUpdate', payload:{modalVisible:true, modalType: "update", selectedRow:{...record}}})}}>修改</span>
-				<span style={{ "marginLeft": "10px","cursor": "pointer" }}>删除</span></div>,
+			render: (record) => <div style={{ "color": "#108ee9" }}>
+				<span style={{ "cursor": "pointer" }} onClick={() => { dispatch({ type: 'forcedUpdate', payload: { modalVisible: true, modalType: "update", selectedRow: { ...record } } }) }}>修改</span>
+				<span style={{ "marginLeft": "10px", "cursor": "pointer" }} onClick={() => { dispatch({ type: 'forcedUpdate', payload: { needDelete: { values: { id: record.id } } } }) }}>删除</span></div>,
 		}
 	];
 
 	const modalRenderProps = {
-		item: modalType === 'create' ? (state.copyRow?state.copyRow:{}) : selectedRow,
+		item: modalType === 'create' ? (state.copyRow ? state.copyRow : {}) : selectedRow,
 		type: modalType,
 		open: modalVisible,
-		onOk (data) {
-		  if (modalType === 'create') {
-			  dispatch({type: 'forcedUpdate', payload:{modalVisible:false, copyRow: false, needCreate:{values: data}}})
-		  } 
-		  if (modalType === 'update') {
-			  dispatch({type: 'forcedUpdate', payload:{modalVisible:false, needUpdate:{values: {...data, updated_at: selectedRow.update_time} }}})
-		  }
-		},    
-		onCancel () {
-		  dispatch({type: 'forcedUpdate', payload:{modalVisible: false, copyRow: false}})
+		onOk(data) {
+			if (modalType === 'create') {
+				dispatch({ type: 'forcedUpdate', payload: { modalVisible: false, needCreate: { values: data } } })
+			}
+			if (modalType === 'update') {
+				dispatch({ type: 'forcedUpdate', payload: { modalVisible: false, needUpdate: { values: { ...data, updated_at: selectedRow.update_time } } } })
+			}
 		},
-	  }
+		onCancel() {
+			dispatch({ type: 'forcedUpdate', payload: { modalVisible: false, selectedRow: {} } })
+		},
+	}
 
 
-	return (
-		<>
-			<div style={{ "marginBottom": "10px" }}>
-				<Button type="primary" icon={<PlusOutlined />} size="small" onClick={()=>dispatch({type:"forcedUpdate",payload:{modalVisible:true}})}>
-					添加
-				</Button>
-			</div>
+	return (<div>
+		<div style={{ "marginBottom": "10px" }}>
+			<Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => dispatch({ type: "forcedUpdate", payload: { modalVisible: true,modalType:"create" } })}>
+				添加
+			</Button>
+		</div>
 
-			<Table
-				columns={columns}
-				rowKey={"id"}
-				dataSource={data}
-				scroll={{
-					x: 1300,
-				}}
-			/>
+		<Table
+			columns={columns}
+			rowKey={"id"}
+			dataSource={data}
+			scroll={{
+				x: 1300,
+			}}
+		/>
 
-			{modalVisible && <ModalRender {...modalRenderProps}/>}
-		</>
-
-	);
+		{modalVisible && <ModalRender {...modalRenderProps} />}
+	</div>);
 };
 
 

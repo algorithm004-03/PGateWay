@@ -8,17 +8,21 @@ function reducer(state, action) {
 		case "updateDataById": {
 			let newData = state.data
 			let {selectedRowIndex, id} = action.payload
-			let i = _.findIndex(newData, {id: id})
+			let i = _.findIndex(newData, { id: id })
+			console.log(333,i)
 			newData[i] = {...newData[i], ...action.payload.data}
-			return {...state, selectedRow: action.payload.data, data: newData}
+			
+			return {...state, selectedRow: action.payload.data, data:[...newData] }
 		}
 		case "deleteDataById": {
-			
 			let newData = state.data
-			let {selectedRowIndex, id} = action.payload
-			let i = _.findIndex(newData, {id: id})
-			newData.splice(i,1)
-			return {...state, data: newData}
+		
+			let { selectedRowIndex, id } = action.payload
+			console.log(888,id)
+			let i = _.findIndex(newData, { id: id })
+			if(i!=-1){newData.splice(i, 1)}
+			
+			return {...state, data: [...newData]}
 		}
 		
 		case "addOneRowData": {

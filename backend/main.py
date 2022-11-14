@@ -1,6 +1,6 @@
 from aiohttp import web
 import aiohttp
-from backend.db.db_session import select, insert, update
+from backend.db.db_session import select, insert, update, delete
 import aiohttp_cors
 
 """微服务地址,根据实际情况修改"""
@@ -55,33 +55,44 @@ cors = aiohttp_cors.setup(app, defaults={
 
 
 @routes.post("/gateway/findAll")
-async def get_all(request):
+async def gateway_query(request):
     try:
         json_data = await request.json()
         offset,limit = json_data["offset"],json_data['limit']
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
-    data_list,total =await select("gateway_mapping",["id","service_name","host","create_time","update_time"],{},offset,limit)
-    return web.json_response({'code':"10000","data":data_list,"total":total,"msg":"请求成功"})
+    result =await select("gateway_mapping",["id","service_name","host","create_time","update_time"],{},offset,limit)
+    return web.json_response(result)
 
 
 @routes.post("/gateway/create")
-async def get_all(request):
+async def gateway_create(request):
     try:
         dict_data = await request.json()
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
     result = await insert("gateway_mapping",dict_data)
-    return web.json_response({'code':"10000","data":result,"msg":"请求成功"})
+    return web.json_response(result)
+
 
 @routes.post("/gateway/update")
-async def get_all(request):
+async def gateway_update(request):
     try:
         dict_data = await request.json()
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
     result = await update("gateway_mapping",dict_data["id"],dict_data)
-    return web.json_response({'code':"10000","data":result,"msg":"请求成功"})
+    return web.json_response(result)
+
+
+@routes.post("/gateway/delete")
+async def gateway_delete(request):
+    try:
+        dict_data = await request.json()
+    except:
+        return web.json_response({'code': "100200", 'msg':"请求参数错误"})
+    result = await delete("gateway_mapping",dict_data["id"])
+    return web.json_response(result)
 
 
 app.router.add_routes(routes)
