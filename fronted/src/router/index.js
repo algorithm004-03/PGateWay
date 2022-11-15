@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 
 
 const Home = lazy(() => import('../pages/home'));
-const Error = lazy(() => import('../pages/error'));
+const Census = lazy(() => import('../pages/census'));
 
 
 const RouterMap = () => {
@@ -20,7 +20,7 @@ const RouterMap = () => {
         <Suspense fallback={<div style={{ marginTop: 50 }}></div>} >
             <Switch>
                 {/* React.lazy(() => import('./OtherComponent')); */}
-                <Route path="/error" component={Error} exact ></Route>
+                <Route path="/census" component={Census} exact ></Route>
                 <Route path="/" component={Home} exact ></Route>
                
             </Switch>

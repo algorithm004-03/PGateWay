@@ -22,7 +22,7 @@ const menuItems = [
       key: 'census',
       icon: <LineChartOutlined/>,
       label: '数据统计',
-      url:"/error"
+      url:"/census"
     },
 ]
 

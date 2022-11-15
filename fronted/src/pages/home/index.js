@@ -134,6 +134,16 @@ function RenderBase() {
 			key: '3',
 		},
 		{
+			title: '黑名单',
+			dataIndex: 'create_time',
+			key: '5',
+		},
+		{
+			title: '限流(次/min)',
+			dataIndex: 'create_time',
+			key: '6',
+		},
+		{
 			title: '更新时间',
 			dataIndex: 'update_time',
 			key: '4',
@@ -143,7 +153,7 @@ function RenderBase() {
 			key: 'operation',
 			fixed: 'right',
 			width: 120,
-			render: (record) => <div style={{ "color": "#108ee9" }}>
+			render: (record) => <div style={{ "color": "#1890FF" }}>
 				<span style={{ "cursor": "pointer" }} onClick={() => { dispatch({ type: 'forcedUpdate', payload: { modalVisible: true, modalType: "update", selectedRow: { ...record } } }) }}>修改</span>
 				<span style={{ "marginLeft": "10px", "cursor": "pointer" }} onClick={() => { dispatch({ type: 'forcedUpdate', payload: { needDelete: { values: { id: record.id } } } }) }}>删除</span></div>,
 		}
