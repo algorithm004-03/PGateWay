@@ -56,6 +56,7 @@ cors = aiohttp_cors.setup(app, defaults={
 
 @routes.post("/gateway/findAll")
 async def gateway_query(request):
+    print(111)
     try:
         json_data = await request.json()
         offset,limit = json_data["offset"],json_data['limit']

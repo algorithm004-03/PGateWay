@@ -44,14 +44,15 @@ const ModalRender = ({
                     if (values[d] == item[d]) { delete values[d]; }
                 })
 
-                if (item.id) { values.id = item.id } //如果是变更，item有内容，把id给到values
+               
             }
+            console.log(111,values)
 
             if (Object.getOwnPropertyNames(values).length == 0) {
                 onCancel()
                 return
             }
-
+            if (item.id) { values.id = item.id } //如果是变更，item有内容，把id给到values
             // if(values.set){ values = {...values, set: JSON.parse(values.set)}}  // 如果是JSON字段需要激活
 
 

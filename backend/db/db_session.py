@@ -6,11 +6,9 @@
 from datetime import datetime
 import aiomysql as aiomysql
 
-pool = None
-
 
 async def get_pool():
-    global pool
+    pool = None
     if pool is None:
         pool = await aiomysql.create_pool(
             host='127.0.0.1',
@@ -21,7 +19,6 @@ async def get_pool():
             autocommit=False,
             cursorclass=aiomysql.cursors.DictCursor)
     return pool
-
 
 async def insert(table_name, insert_dict):
     pool = await get_pool()
@@ -36,47 +33,51 @@ async def insert(table_name, insert_dict):
         sql = "insert into %s(%s) values(%s)" % (table_name, param, value)
         conn = await pool.acquire()
         cursor = await conn.cursor()
-        # try:
-        await cursor.execute(sql)
-        await conn.commit()
-        id = cursor.lastrowid
-        query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
-                    "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
-        await cursor.execute(query_sql)
-        (result,) = await cursor.fetchall()
-        return {"code":10000,"msg":"新增成功","data":result}
-        # except:
-        #     await conn.rollback()
-        #     return {"code": 10001, "msg": "数据库执行错误"}
-        # finally:
-        #     await cursor.close()
-        #     conn.close()
+        try:
+            await cursor.execute(sql)
+            await conn.commit()
+            id = cursor.lastrowid
+            query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
+                        "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
+            await cursor.execute(query_sql)
+            (result,) = await cursor.fetchall()
+            return {"code":10000,"msg":"新增成功","data":result}
+        except:
+            await conn.rollback()
+            return {"code": 10001, "msg": "数据库执行错误"}
+        finally:
+            await cursor.close()
+            conn.close()
 
 
 async def update(table_name,id,update_dict):
     pool = await get_pool()
     if (isinstance(update_dict, dict)):
+        conn = await pool.acquire()
+        cursor = await conn.cursor()
+        query_sql = "select date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
+        await cursor.execute(query_sql)
+        (result,) = await cursor.fetchall()
+        if result["update_time"] != update_dict["updated_at"]:
+            return {"code": 10003, "msg": "当前数据不是最新的,请获取最新数据"}
         del update_dict["id"]
         del update_dict["updated_at"]
         update_content_sql = ''.join(["{}='{}',".format(val,update_dict[val]) for val in list(update_dict.keys())])[:-1]
         sql = "update {} set {} where id={}".format(table_name, update_content_sql,id)
-        conn = await pool.acquire()
-        cursor = await conn.cursor()
-        # try:
-        await cursor.execute(sql)
-        await conn.commit()
-        query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
-                    "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
-        await cursor.execute(query_sql)
-        (result,) = await cursor.fetchall()
-        return {"code": 10000, "msg": "修改成功", "data": result}
-        # except:
-        #     await conn.rollback()
-        #     return {"code": 10001, "msg": "数据库执行错误"}
-        # finally:
-        #     await cursor.close()
-        #     conn.close()
-
+        try:
+            await cursor.execute(sql)
+            await conn.commit()
+            query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
+                        "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
+            await cursor.execute(query_sql)
+            (result,) = await cursor.fetchall()
+            return {"code": 10000, "msg": "修改成功", "data": result}
+        except:
+            await conn.rollback()
+            return {"code": 10001, "msg": "数据库执行错误"}
+        finally:
+            await cursor.close()
+            conn.close()
 
 
 async def select(table_name,column_names,where_dict,offset=0,limit=10):
@@ -98,7 +99,6 @@ async def select(table_name,column_names,where_dict,offset=0,limit=10):
         cursor = await conn.cursor()
         try:
             await cursor.execute(sql_data)
-
             (r) = await cursor.fetchall()
             await cursor.execute(sql_count)
             result = await cursor.fetchall()
@@ -110,8 +110,7 @@ async def select(table_name,column_names,where_dict,offset=0,limit=10):
             return {"code": 10001, "msg": "数据库执行错误"}
         finally:
             await cursor.close()
-            conn.close()
-
+            # conn.close()
 
 
 async def delete(table_name,id):
@@ -121,7 +120,6 @@ async def delete(table_name,id):
     conn = await pool.acquire()
     cursor = await conn.cursor()
     try:
-        print(111,sql)
         await cursor.execute(sql)
         await conn.commit()
         return {"code": 10000, "msg": "删除成功"}

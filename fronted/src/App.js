@@ -4,7 +4,7 @@ import RouterMap from './router/index'
 import React from 'react';
 import { useState, useEffect, useReducer, useContext } from 'react';
 import { Layout, Menu } from 'antd';
-import Home from "../src/pages/home"
+import Router from "../src/router"
 
 import {
 	MenuFoldOutlined,
@@ -47,7 +47,7 @@ function App() {
 			  onClick: () => setCollapsed(!collapsed),
 			})}
         </Header>
-        <div style={{"paddingTop":"10px","paddingLeft":"10px"}}> <Home/></div>
+        <div style={{"paddingTop":"10px","paddingLeft":"10px"}}> <Router/></div>
        
 		  {/* <Content
 			className="site-layout-background"
