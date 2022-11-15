@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import {menuItems,getUrl} from "./pages/tabs"
 import RouterMap from './router/index'
 import React from 'react';
 import { useState, useEffect, useReducer, useContext } from 'react';
 import { Layout, Menu } from 'antd';
 import Router from "../src/router"
+import { useHistory } from 'react-router-dom'
 
 import {
 	MenuFoldOutlined,
@@ -12,11 +14,19 @@ import {
 	UploadOutlined,
 	ClusterOutlined,
 	VideoCameraOutlined,
+	LineChartOutlined
 } from '@ant-design/icons';
 const { Header, Sider, Content } = Layout;
 
 function App() {
+  const history = useHistory();
   const [collapsed, setCollapsed] = useState(false);
+
+	
+	function urlDirect(key) {
+	  let url = getUrl(key);
+	  history.push(url)
+  }
 
   return (
     <Layout style={{height:"100%"}}>
@@ -24,15 +34,10 @@ function App() {
 		  <div className="logo" />
 		  <Menu
 			theme="dark"
+			onClick={(item)=>{urlDirect(item.key)}}
 			mode="inline"
-			defaultSelectedKeys={['1']}
-			items={[
-			  {
-				key: '1',
-				icon: <ClusterOutlined/>,
-				label: '微服务',
-			  },
-			]}
+			defaultSelectedKeys={['server']}
+			items={menuItems}
 		  />
 		</Sider>
 		<Layout className="site-layout">
@@ -48,17 +53,6 @@ function App() {
 			})}
         </Header>
         <div style={{"paddingTop":"10px","paddingLeft":"10px"}}> <Router/></div>
-       
-		  {/* <Content
-			className="site-layout-background"
-			style={{
-			  margin: '24px 16px',
-			  padding: 24,
-			  minHeight: 280,
-			}}
-		  >
-			Content
-		  </Content> */}
 		</Layout>
 	  </Layout>
   );

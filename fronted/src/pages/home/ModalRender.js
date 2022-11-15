@@ -46,7 +46,6 @@ const ModalRender = ({
 
                
             }
-            console.log(111,values)
 
             if (Object.getOwnPropertyNames(values).length == 0) {
                 onCancel()
