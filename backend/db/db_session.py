@@ -6,6 +6,8 @@
 from datetime import datetime
 import aiomysql as aiomysql
 
+from log.log import logger
+
 
 async def get_pool():
     pool = None
@@ -19,6 +21,7 @@ async def get_pool():
             autocommit=False,
             cursorclass=aiomysql.cursors.DictCursor)
     return pool
+
 
 async def insert(table_name, insert_dict):
     pool = await get_pool()
@@ -39,6 +42,7 @@ async def insert(table_name, insert_dict):
             id = cursor.lastrowid
             query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
                         "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
+            logger.debug(query_sql)
             await cursor.execute(query_sql)
             (result,) = await cursor.fetchall()
             return {"code":10000,"msg":"新增成功","data":result}
@@ -64,6 +68,7 @@ async def update(table_name,id,update_dict):
         del update_dict["updated_at"]
         update_content_sql = ''.join(["{}='{}',".format(val,update_dict[val]) for val in list(update_dict.keys())])[:-1]
         sql = "update {} set {} where id={}".format(table_name, update_content_sql,id)
+        logger.debug(sql)
         try:
             await cursor.execute(sql)
             await conn.commit()
@@ -99,6 +104,7 @@ async def select(table_name,column_names,where_dict,offset=0,limit=10):
         cursor = await conn.cursor()
         try:
             await cursor.execute(sql_data)
+            logger.debug(sql_data)
             (r) = await cursor.fetchall()
             await cursor.execute(sql_count)
             result = await cursor.fetchall()
@@ -117,6 +123,7 @@ async def delete(table_name,id):
     pool = await get_pool()
     now_time = datetime.now()
     sql = "update {} set delete_time = '{}' where id = {}".format(table_name,now_time, id)
+    logger.debug(sql)
     conn = await pool.acquire()
     cursor = await conn.cursor()
     try:

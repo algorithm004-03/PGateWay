@@ -3,6 +3,8 @@ import aiohttp
 from backend.db.db_session import select, insert, update, delete
 import aiohttp_cors
 
+from backend.log.log import  logger
+
 """微服务地址,根据实际情况修改"""
 SERVER = "127.0.0.1:8080"
 
@@ -56,9 +58,9 @@ cors = aiohttp_cors.setup(app, defaults={
 
 @routes.post("/gateway/findAll")
 async def gateway_query(request):
-    print(111)
     try:
         json_data = await request.json()
+        logger.info(json_data)
         offset,limit = json_data["offset"],json_data['limit']
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
@@ -70,6 +72,7 @@ async def gateway_query(request):
 async def gateway_create(request):
     try:
         dict_data = await request.json()
+        logger.info(dict_data)
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
     result = await insert("gateway_mapping",dict_data)
@@ -80,6 +83,7 @@ async def gateway_create(request):
 async def gateway_update(request):
     try:
         dict_data = await request.json()
+        logger.info(dict_data)
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
     result = await update("gateway_mapping",dict_data["id"],dict_data)
@@ -90,6 +94,7 @@ async def gateway_update(request):
 async def gateway_delete(request):
     try:
         dict_data = await request.json()
+        logger.info(dict_data)
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
     result = await delete("gateway_mapping",dict_data["id"])
@@ -103,4 +108,5 @@ for route in list(app.router.routes()):
     cors.add(route)
 
 
-web.run_app(app)
+if __name__ == "__main__":
+    web.run_app(app)

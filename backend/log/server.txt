@@ -1,0 +1,12 @@
+[2022-11-15 11:15:05,950] [13028] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:05,950] [13028] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:05,962] [13028] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:05,962] [13028] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:29,606] [24176] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:29,606] [24176] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:29,609] [24176] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:29,609] [24176] [INFO] - main.gateway_query (main.py:63) - {'offset': 0, 'limit': 10}
+[2022-11-15 11:15:29,613] [24176] [DEBUG] - db_session.select (db_session.py:107) - select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time,date_format(update_time,'%Y-%m-%d %T') as update_time from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-15 11:15:29,613] [24176] [DEBUG] - db_session.select (db_session.py:107) - select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time,date_format(update_time,'%Y-%m-%d %T') as update_time from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-15 11:15:29,676] [24176] [DEBUG] - db_session.select (db_session.py:107) - select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time,date_format(update_time,'%Y-%m-%d %T') as update_time from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-15 11:15:29,676] [24176] [DEBUG] - db_session.select (db_session.py:107) - select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time,date_format(update_time,'%Y-%m-%d %T') as update_time from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10

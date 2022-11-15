@@ -23,7 +23,6 @@ var initialState = {
 
 
 function RenderBase() {
-
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { data, dataLoading, modalVisible, modalType, selectedRow, pagination } = state;
 

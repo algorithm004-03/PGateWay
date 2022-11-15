@@ -14,7 +14,6 @@ const AxiosServer = function () {
 
 async function Post({ url, values = {} }) {
 	/**通用方法，都是post方法+json格式。*/
-    console.log(555,url)
 	// 检查url, values; 必须改成 async function 否则这里返回的时候，用.then会报错
 	if (isnull.str(url) || typeof (values) != "object") {
 		return { status: 999, body: { msg: '参数url和values都不能为空' } } //status 是前端状态，后端统一是code状态
