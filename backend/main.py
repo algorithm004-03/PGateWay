@@ -1,9 +1,11 @@
 from aiohttp import web
 import aiohttp
-from backend.db.db_session import select, insert, update, delete
+from db.db_session import select, insert, update, delete
 import aiohttp_cors
 
-from backend.log.log import  logger
+from log.log import  logger
+
+
 
 """微服务地址,根据实际情况修改"""
 SERVER = "127.0.0.1:8080"
