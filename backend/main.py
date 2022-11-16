@@ -2,7 +2,7 @@ from aiohttp import web
 import aiohttp
 from db.db_session import select, insert, update, delete
 import aiohttp_cors
-
+from utils.utils import ip_limit
 from log.log import  logger
 
 
@@ -13,9 +13,11 @@ SERVER = "127.0.0.1:8080"
 
 """路由转发函数"""
 async def fetch(request,session, url):
-    async with session.request(request.method,json=await request.json(),url=url) as response:
-        return {"code": response.status,"data":await response.text()}
-
+    try:
+        async with session.request(request.method,json=await request.json(),url=url) as response:
+            return {"code": response.status,"data":await response.text()}
+    except:
+        return {"code": 10000,"msg":"微服务异常"}
 
 """预处理函数"""
 async def pre_handle(service_name,request):
@@ -23,9 +25,9 @@ async def pre_handle(service_name,request):
         return {"code": "100010", "data": "暂不支持非json格式数据"}
     else:
         """根据微服务名称查找微服务地址及端口"""
-        micro_server_list,total = await select("gateway_mapping",["host"],{"service_name":service_name})
-        if micro_server_list:
-            host = micro_server_list[0]['host']
+        result = await select("gateway_mapping",["host"],{"service_name":service_name})
+        if result["code"]==10000 and result["data"]:
+            host = result["data"][0]['host']
             target_url = str(request.url).replace(SERVER + '/' + service_name, host)
             async with aiohttp.ClientSession() as session:
                 response = await fetch(request, session, target_url)
@@ -38,8 +40,13 @@ async def pre_handle(service_name,request):
 async def before_request(request,handler):
     service_name = str(request.url).split('/')[3]
     if service_name == "gateway":
-         return await handler(request)
+        return await handler(request)
     else:
+        """黑名单处理逻辑"""
+        ip = request.host.split(':')[0]
+        result =await ip_limit(ip,service_name)
+        if result:
+            return web.json_response({'data': result})
         response =await pre_handle(service_name,request)
         return web.json_response({'data':response})
 
@@ -66,7 +73,7 @@ async def gateway_query(request):
         offset,limit = json_data["offset"],json_data['limit']
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
-    result =await select("gateway_mapping",["id","service_name","host","create_time","update_time","black_list"],{},offset,limit)
+    result =await select("gateway_mapping",["id","number","service_name","host","create_time","update_time","black_list"],{},offset,limit)
     return web.json_response(result)
 
 
