@@ -89,6 +89,18 @@ const ModalRender = ({
                 >
                     <Input />
                 </Form.Item>
+                <Form.Item
+                    label="黑名单"
+                    name="black_list"
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    label="频率(次/min)"
+                    name="number"
+                >
+                    <Input />
+                </Form.Item>
             </Form>
         </Modal>
     )

@@ -131,22 +131,22 @@ function RenderBase() {
 		{
 			title: '创建时间',
 			dataIndex: 'create_time',
-			key: '3',
+			key: 'create_time',
 		},
 		{
 			title: '黑名单',
-			dataIndex: 'create_time',
-			key: '5',
+			dataIndex: 'black_list',
+			key: 'black_list',
 		},
 		{
 			title: '限流(次/min)',
-			dataIndex: 'create_time',
-			key: '6',
+			dataIndex: 'number',
+			key: 'number',
 		},
 		{
 			title: '更新时间',
 			dataIndex: 'update_time',
-			key: '4',
+			key: 'update_time',
 		},
 		{
 			title: '操作',

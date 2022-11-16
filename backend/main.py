@@ -45,7 +45,7 @@ async def before_request(request,handler):
 
 
 app = web.Application(middlewares=[before_request])
-# app = web.Application()
+
 
 routes = web.RouteTableDef()
 
@@ -66,7 +66,7 @@ async def gateway_query(request):
         offset,limit = json_data["offset"],json_data['limit']
     except:
         return web.json_response({'code': "100200", 'msg':"请求参数错误"})
-    result =await select("gateway_mapping",["id","service_name","host","create_time","update_time"],{},offset,limit)
+    result =await select("gateway_mapping",["id","service_name","host","create_time","update_time","black_list"],{},offset,limit)
     return web.json_response(result)
 
 

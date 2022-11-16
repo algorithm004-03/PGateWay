@@ -72,7 +72,7 @@ async def update(table_name,id,update_dict):
         try:
             await cursor.execute(sql)
             await conn.commit()
-            query_sql = "select id,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time," \
+            query_sql = "select id,service_name,number,host,black_list,date_format(create_time,'%Y-%m-%d %T') as create_time," \
                         "date_format(update_time,'%Y-%m-%d %T') as update_time from {} where id = {}".format(table_name, id)
             await cursor.execute(query_sql)
             (result,) = await cursor.fetchall()
