@@ -96,7 +96,7 @@ const ModalRender = ({
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="频率(次/min)"
+                    label="频率(次/秒)"
                     name="number"
                 >
                     <Input />

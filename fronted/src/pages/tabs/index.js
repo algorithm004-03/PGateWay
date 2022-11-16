@@ -21,7 +21,7 @@ const menuItems = [
     {
       key: 'census',
       icon: <LineChartOutlined/>,
-      label: '数据统计',
+      label: '流量统计',
       url:"/census"
     },
 ]
@@ -30,12 +30,10 @@ const getUrl=(key)=> {
     let url =   "/404"
     menuItems.forEach(d => {
         if (d.key == key) {
-            console.log(111,d.url )
             url = d.url
             return 
         } 
     })
-    console.log(222,url)
     return url
 }
   

@@ -13,6 +13,7 @@ import {
 var initialState = {
 	data: [],
 	dataLoading: true,
+	dataLoadingFinished: false,
 	modalVisible: false,
 	modalType: 'create',
 	selectedRow: {},
@@ -24,7 +25,7 @@ var initialState = {
 
 function RenderBase() {
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const { data, dataLoading, modalVisible, modalType, selectedRow, pagination } = state;
+	const { data, dataLoading, modalVisible, modalType, selectedRow, pagination, dataLoadingFinished } = state;
 
 	useEffect(() => {
 
@@ -35,10 +36,10 @@ function RenderBase() {
 				let { status, body } = res
 				console.log("findAll", body)
 				if (status == 200 && body.code == 10000) {
-					dispatch({ type: 'forcedUpdate', payload: { data: body.data,  pagination: { ...pagination, total: body.total ? body.total : 0 } } })
+					dispatch({ type: 'forcedUpdate', payload: { data: body.data, dataLoadingFinished: true, pagination: { ...pagination, total: body.total ? body.total : 0 } } })
 				} else {
 					let messageDisplay = body.msg ? body.msg : errMessage[status]
-					dispatch({ type: 'forcedUpdate', payload: { statusCode: status } })
+					dispatch({ type: 'forcedUpdate', payload: { statusCode: status, dataLoadingFinished: true } })
 					message.error(messageDisplay);
 				}
 			}).catch((err) => {
@@ -54,7 +55,7 @@ function RenderBase() {
 				let { status, body } = res
 				console.log("create", body)
 				if (status == 200 && body.code == 10000) {
-					dispatch({ type: 'addOneRowData', payload: {data:body.data } })
+					dispatch({ type: 'addOneRowData', payload: { data: body.data } })
 				} else {
 					let messageDisplay = body.msg ? body.msg : errMessage[status]
 					dispatch({ type: 'forcedUpdate', payload: { dataLoadingFinished: true, statusCode: status } })
@@ -91,7 +92,7 @@ function RenderBase() {
 				let { status, body } = res
 				if (status == 200 && body.code == 10000) {
 					message.success(body.msg);
-					dispatch({ type: 'deleteDataById', payload: { id: values.id} })
+					dispatch({ type: 'deleteDataById', payload: { id: values.id } })
 				} else {
 					message.error(body.msg);
 				}
@@ -139,7 +140,7 @@ function RenderBase() {
 			key: 'black_list',
 		},
 		{
-			title: '限流(次/min)',
+			title: '限流(次/秒)',
 			dataIndex: 'number',
 			key: 'number',
 		},
@@ -176,22 +177,30 @@ function RenderBase() {
 		},
 	}
 
+	const tabelDefinition = {
+		rowKey: 'id',
+		loading: !dataLoadingFinished,
+		size: 'small',
+		columns: columns,
+		dataSource: data,
+		scroll: { x: 1300 },
+		// rowSelection: rowSelection,
+		onChange: (pagination, filters, sorter, extra) => {
+			dispatch({ type: 'forcedUpdate', payload: { sorterPage: sorter, pagination: pagination, dataLoading: true } })
+		},
+		pagination: { ...pagination, showSizeChanger: true, showTotal: total => `总行数: ${total}` },
+		// rowClassName: (record)=>{	if(record.check_result){ return "errorItem"	}	},
+	}
+
 
 	return (<div>
 		<div style={{ "marginBottom": "10px" }}>
-			<Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => dispatch({ type: "forcedUpdate", payload: { modalVisible: true,modalType:"create" } })}>
+			<Button type="primary" icon={<PlusOutlined />} size="small" onClick={() => dispatch({ type: "forcedUpdate", payload: { modalVisible: true, modalType: "create" } })}>
 				添加
 			</Button>
 		</div>
 
-		<Table
-			columns={columns}
-			rowKey={"id"}
-			dataSource={data}
-			scroll={{
-				x: 1300,
-			}}
-		/>
+		<Table {...tabelDefinition} />
 
 		{modalVisible && <ModalRender {...modalRenderProps} />}
 	</div>);
