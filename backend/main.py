@@ -2,7 +2,7 @@ from aiohttp import web
 import aiohttp
 from db.db_session import select, insert, update, delete
 import aiohttp_cors
-from utils.utils import ip_limit
+from utils.utils import ip_limit,number_limit
 from log.log import  logger
 
 
@@ -45,6 +45,10 @@ async def before_request(request,handler):
         """黑名单处理逻辑"""
         ip = request.host.split(':')[0]
         result =await ip_limit(ip,service_name)
+        if result:
+            return web.json_response({'data': result})
+        """频次限制逻辑"""
+        result = number_limit(service_name)
         if result:
             return web.json_response({'data': result})
         response =await pre_handle(service_name,request)

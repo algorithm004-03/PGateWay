@@ -46,3 +46,82 @@
 [2022-11-16 14:13:43,261] [7764] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
 [2022-11-16 14:13:43,275] [7764] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'index' and 1 = 1 and  delete_time is null limit 0,10
 [2022-11-16 14:13:43,280] [7764] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'index' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 15:39:59,038] [21724] [INFO] - main.gateway_query (main.py:76) - {'offset': 0, 'limit': 10}
+[2022-11-16 15:39:59,040] [21724] [INFO] - main.gateway_query (main.py:76) - {'offset': 0, 'limit': 10}
+[2022-11-16 15:40:03,262] [21724] [DEBUG] - db_session.select (db_session.py:107) - select id,number,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time,date_format(update_time,'%Y-%m-%d %T') as update_time,black_list from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 15:40:03,272] [21724] [DEBUG] - db_session.select (db_session.py:107) - select id,number,service_name,host,date_format(create_time,'%Y-%m-%d %T') as create_time,date_format(update_time,'%Y-%m-%d %T') as update_time,black_list from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 15:41:48,333] [21724] [INFO] - main.gateway_update (main.py:99) - {'number': '2', 'id': 1, 'updated_at': '2022-11-16 14:13:41'}
+[2022-11-16 15:41:48,764] [21724] [DEBUG] - db_session.update (db_session.py:71) - update gateway_mapping set number='2' where id=1
+[2022-11-16 15:41:58,943] [21724] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:01:24,055] [12984] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:04:22,109] [17820] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:04:31,139] [7396] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:17:05,786] [24800] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:17:23,051] [24800] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:18:05,930] [21424] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:18:12,434] [21424] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:20:47,396] [4392] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:20:50,094] [4392] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:21:15,174] [19952] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:21:17,650] [19952] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:21:17,701] [19952] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:21:17,748] [19952] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'index' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:23:13,923] [12784] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:23:16,765] [12784] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:23:16,853] [12784] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:23:16,901] [12784] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'index' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:24:12,007] [12784] [INFO] - main.gateway_update (main.py:99) - {'host': '192.168.6.1:8080', 'id': 1, 'updated_at': '2022-11-16 15:41:48'}
+[2022-11-16 16:24:12,264] [12784] [DEBUG] - db_session.update (db_session.py:71) - update gateway_mapping set host='192.168.6.1:8080' where id=1
+[2022-11-16 16:24:16,218] [12784] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:24:16,293] [12784] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:24:34,503] [3544] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:24:37,912] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:24:37,923] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:25:22,233] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:25:22,250] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:26:21,574] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:26:21,582] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:26:37,994] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:26:38,020] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:26:41,153] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:26:41,185] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:03,533] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:03,564] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:06,339] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:06,397] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:08,448] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:08,456] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:10,095] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:10,101] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:11,974] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:12,020] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:19,228] [3544] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:27:19,279] [3544] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:28:32,006] [10092] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:28:34,623] [10092] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:28:34,637] [10092] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:28:46,027] [10092] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:28:46,045] [10092] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:13,700] [10092] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:13,727] [10092] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:19,126] [1476] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:21,154] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:21,162] [1476] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:22,821] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:25,707] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:27,531] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:34,015] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:35,652] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:37,441] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:39,002] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:45,572] [1476] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:51,059] [14660] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:51,287] [14660] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:51,305] [14660] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:55,207] [14660] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:55,212] [14660] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:57,222] [14660] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:57,267] [14660] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:58,699] [14660] [DEBUG] - db_session.select (db_session.py:107) - select black_list from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:29:58,708] [14660] [DEBUG] - db_session.select (db_session.py:107) - select host from gateway_mapping where service_name = 'test23' and 1 = 1 and  delete_time is null limit 0,10
+[2022-11-16 16:30:25,411] [7856] [DEBUG] - db_session.select (db_session.py:107) - select service_name,number from gateway_mapping where  1 = 1 and  delete_time is null limit 0,10

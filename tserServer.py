@@ -15,13 +15,15 @@
 
 
     # app.run(host="0.0.0.0",port=6666)
-
-def a():
-    try:
-        return 1
-    except:
-        pass
-    finally:
-        print(11)
-
-a()
+a = [{"A":1},{"B":2}]
+for i in a:
+    print(i.keys(),i.values())
+# def a():
+#     try:
+#         return 1
+#     except:
+#         pass
+#     finally:
+#         print(11)
+#
+# a()
