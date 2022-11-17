@@ -12,34 +12,55 @@
 
 频次限制:限制每个微服务的访问频次![Badges](https://img.shields.io/badge/complete-100%25-green)
 
-流量统计:待开发![Badges](https://img.shields.io/badge/complete-35%25-green)
+流量统计:正在开发![Badges](https://img.shields.io/badge/complete-35%25-green)
 
 统一认证:待开发![Badges](https://img.shields.io/badge/complete-0%25-red)
 
 权限管理:待开发![Badges](https://img.shields.io/badge/complete-0%25-red)
 
 ### Features - 特性
+1.可视化的界面配置
 
-## Requirements - 必要条件（环境，对所有项目，和所有子模块和库的描述。）
+![](./01.png)
 
 ## Configuration - 配置（配置信息。）
 
-## Installation - 安装（如何安装。）
+python:3.6及以上
+react:18.2.0及以上
+mysql:5.7.8及以上(支持存储json数据)
 
-## Usage - 用法（用法。）
+## Installation - 安装
+git clone下载
+
+## Usage - 用法
+1.进入到"backend"目录,执行`pip install -r ./requirements.txt`
+
+2.进入到"fronted"目录,执行`npm install`
+
+3.进入mysql,执行
+`
+CREATE TABLE IF NOT EXISTS `gateway_mapping`(
+   `id` INT UNSIGNED AUTO_INCREMENT,
+   `service_name` VARCHAR(20) NOT NULL unique,
+   `host` VARCHAR(20) NOT NULL,
+   `is_alive` INT(1)  NULL,
+   `black_list` json,
+   `number` int,
+   `delete_time` timestamp NULL,
+   `create_time` timestamp NULL default CURRENT_TIMESTAMP,
+   `update_time` timestamp NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+`
+
+4.分别在"backend"目录及"fronted"目录,执行`python main.py`,`npm start`
 
 ## Development - 开发（关于怎样开发的文档信息。（API 等。））
+生产环境请配合nginx进行反向代理
 
-## Changelog - 更新日志（一个简短的历史记录（更改，替换或者其他）。）
 
 ## FAQ - 常见问题（常见问题。）
+暂无
 
-## Support - 支持
-
-### Dos - 文档（更多文档。）
-
-### Contact - 联系（其他联系信息（电子邮件地址，网站，公司名称，地址等）。提交bug，功能要求，提交补丁，加入邮件列表，得到通知，或加入用户或开发开发区群的介绍。）
-
-## Authors and acknowledgment - 贡献者和感谢（作者列表和鸣谢。）
 
 ## License - 版权信息（版权和许可信息（或阅读许可证）、法律声明。）
