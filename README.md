@@ -21,7 +21,7 @@
 ### Features - 特性
 1.可视化的界面配置
 
-<img src="https://s3.amazonaws.com/image.yogile.com/er5vkycg8ai/bvf7acwyqe-extra_large.png?1668669553" border="0" />
+<img src="https://thumbnail1.baidupcs.com/thumbnail/9c8e1c2d1j9189829834b699ba5cf40c?fid=2673879651-250528-318033908916082&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-3m7YEXUxmEnKvnrrHb%2fELD9z4lw%3d&expires=8h&chkbd=0&chkv=0&dp-logid=519972929847676798&dp-callid=0&time=1668672000&size=c1920_u1080&quality=90&vuk=2673879651&ft=image&autopolicy=1" border="0" />
 
 
 ## Configuration - 配置（配置信息。）
