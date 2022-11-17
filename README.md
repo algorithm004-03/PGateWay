@@ -21,7 +21,7 @@
 ### Features - 特性
 1.可视化的界面配置
 
-![](./01.png)
+![](https://www.yogile.com/er5vkycg8ai#21t)
 
 ## Configuration - 配置（配置信息。）
 
