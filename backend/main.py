@@ -4,6 +4,7 @@ from db.db_session import select, insert, update, delete
 import aiohttp_cors
 from utils.utils import ip_limit,number_limit
 from log.log import  logger
+import json
 
 
 
@@ -14,10 +15,11 @@ SERVER = "127.0.0.1:8080"
 """路由转发函数"""
 async def fetch(request,session, url):
     try:
-        async with session.request(request.method,json=await request.json(),url=url) as response:
-            return {"code": response.status,"data":await response.text()}
+        headers = {"Content-Type": "application/json"}
+        async with session.request(request.method,json=await request.json(),url=url,headers=headers) as response:
+            return {"code": 10000,"data":json.loads(await response.text())["data"]}
     except:
-        return {"code": 10000,"msg":"微服务异常"}
+        return {"code": 10006,"msg":"微服务异常"}
 
 """预处理函数"""
 async def pre_handle(service_name,request):

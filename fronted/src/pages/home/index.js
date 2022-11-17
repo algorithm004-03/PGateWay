@@ -120,6 +120,7 @@ function RenderBase() {
 			//   width: 100,
 			dataIndex: 'service_name',
 			key: 'service_name',
+			sorter: (a, b) => { let x = a.service_name||"";  let y = b.service_name||"";  if(x<y){return -1}else{return 1}}, 
 			fixed: 'left',
 		},
 		{
@@ -132,6 +133,7 @@ function RenderBase() {
 		{
 			title: '创建时间',
 			dataIndex: 'create_time',
+			sorter: (a, b) => { let x = a.create_time||"";  let y = b.create_time||"";  if(x<y){return -1}else{return 1}}, 
 			key: 'create_time',
 		},
 		{
@@ -147,6 +149,7 @@ function RenderBase() {
 		{
 			title: '更新时间',
 			dataIndex: 'update_time',
+			sorter: (a, b) => { let x = a.update_time||"";  let y = b.update_time||"";  if(x<y){return -1}else{return 1}}, 
 			key: 'update_time',
 		},
 		{
