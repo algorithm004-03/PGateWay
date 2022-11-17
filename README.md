@@ -1,10 +1,22 @@
-# Name
+# Python微服务网关
 
-[Badges]
+![Badges](https://img.shields.io/badge/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3-aiohttp-yellowgreen)
+
 
 ## Introduction - 介绍
-
+网关服务是单一访问点，并充当多项服务的代理。服务网关启用了跨所有服务的变换、路由和公共处理。
 ### Summary - 概要
+动态路由：动态将请求路由到不同后端服务![Badges](https://img.shields.io/badge/complete-100%25-green)
+
+黑名单:限制某些IP的访问![Badges](https://img.shields.io/badge/complete-100%25-green)
+
+频次限制:限制每个微服务的访问频次![Badges](https://img.shields.io/badge/complete-100%25-green)
+
+流量统计:待开发![Badges](https://img.shields.io/badge/complete-35%25-green)
+
+统一认证:待开发![Badges](https://img.shields.io/badge/complete-0%25-red)
+
+权限管理:待开发![Badges](https://img.shields.io/badge/complete-0%25-red)
 
 ### Features - 特性
 
