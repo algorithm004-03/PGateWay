@@ -21,7 +21,7 @@
 ### Features - 特性
 1.可视化的界面配置
 
-![](https://s3.amazonaws.com/image.yogile.com/er5vkycg8ai/bvf7acwyqe-extra_large.png?1668669553)
+![image](https://s3.amazonaws.com/image.yogile.com/er5vkycg8ai/bvf7acwyqe-extra_large.png?1668669553)
 
 ## Configuration - 配置（配置信息。）
 
